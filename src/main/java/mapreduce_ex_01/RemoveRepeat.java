@@ -11,27 +11,27 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 public class RemoveRepeat {
-    public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
-        private final static IntWritable one = new IntWritable(1);
+    public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
+        private final static Text placeholder = new Text("");
         private final Text word = new Text();
 
-        public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+        public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
             String line = value.toString();
             StringTokenizer tokenizer = new StringTokenizer(line);
             while (tokenizer.hasMoreTokens()) {
                 word.set(tokenizer.nextToken());
-                output.collect(word, one);
+                output.collect(word, placeholder);
             }
         }
     }
 
-    public static class Reduce extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
-        public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
-            int sum = 0;
+    public static class Reduce extends MapReduceBase implements Reducer<Text, Text, Text, IntWritable> {
+        private static int sum = 0;
+        public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
             while (values.hasNext()) {
-                sum += values.next().get();
+                values.next();
+                output.collect(key, new IntWritable(sum));
             }
-            output.collect(key, new IntWritable(sum));
         }
     }
 
