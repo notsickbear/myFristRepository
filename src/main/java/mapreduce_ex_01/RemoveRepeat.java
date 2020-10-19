@@ -50,7 +50,7 @@ public class RemoveRepeat {
 
         String infile = "hdfs://localhost:9000/mydir/input/WordCount.java";
         FileInputFormat.addInputPath(jobConf, new Path(infile));
-        String outfile = "hdfs://localhost:9000/mydir/output" + System.getSecurityManager();
+        String outfile = "hdfs://localhost:9000/mydir/output" + System.currentTimeMillis();
         FileOutputFormat.setOutputPath(jobConf, new Path(outfile));
         /*FileInputFormat.setInputPaths(jobConf, new Path(args[0]));
         FileOutputFormat.setOutputPath(jobConf, new Path(args[1]));*/
